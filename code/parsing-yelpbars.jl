@@ -15,8 +15,11 @@ for (n,l) in enumerate(eachline(filename))
 
     end
     global cats=D["categories"]
-    if length(intersect(cats,["Bars"]))>0&&length(cats)==3; println(setdiff(cats,["CDs_and_Vinyl"])); end
-    if n>20; break; end
+    if cats==nothing; continue; end
+    cats=split(cats,",")
+    #println(typeof(D["categories"]))
+    if cats!==nothing; if length(intersect(cats,["Bars"]))>0; println(cats); end; end
+    if n>200; break; end
 
 
 end
@@ -72,6 +75,8 @@ for (n,l) in enumerate(eachline(filename))
 
     end
     cats=D["categories"]
+
+    cats=split(cats,",")
     if length(intersect(cats,["Bars"]))>0&&length(intersect(cats,["Food","Restaurants"]))==0&&length(cats)==3&&D["city"]==city&&D["state"]==state;cats_map[D["business_id"]]=setdiff(cats,["Nightlife","Bars"])[1]; end
     if n % 10000==0; println(n); end
 

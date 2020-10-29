@@ -1,7 +1,7 @@
 using JSON
 using Dates
 
-filename = "yelp/business.json"
+filename = "../yelp/business.json"
 i=0
 for (n,l) in enumerate(eachline(filename))
 
@@ -14,8 +14,9 @@ for (n,l) in enumerate(eachline(filename))
         end
 
     end
-    global cats=D["categories"]
-    println(setdiff(cats,["CDs_and_Vinyl"]))
+    cats=D["categories"]
+    cats=convert(Array{String},split(cats,", "))
+    println(setdiff(cats,["Food"]))
     if n>20; break; end
 
 
@@ -34,9 +35,8 @@ end
 
 city="Madison"
 state="WI"
-city="Cleveland"
-state="OH"
 cuisines=["Chinese" ,"Korean" ,"Thai" ,"Indian" ,"Mexican" ,"Japanese" ,"Italian" ,"American (Traditional)" ,"French" ,"Mongolian"]
+cats=""
 for (n,l) in enumerate(eachline(filename))
 
     D = JSON.parse(l)
@@ -72,15 +72,18 @@ for (n,l) in enumerate(eachline(filename))
         end
 
     end
-
-    if length(intersect(D["categories"],["Restaurants"]))==1&&length(D["categories"])==2&&D["city"]==city&&length(intersect(D["categories"],cuisines))>0&&D["state"]==state;cats_map[D["business_id"]]=setdiff(D["categories"],["Restaurants"])[1]; end
+    cats=D["categories"]
+    if cats!== nothing
+        cats=convert(Array{String},split(cats,", "));
+        if length(intersect(cats,["Restaurants"]))==1&&length(cats)==2&&D["city"]==city&&length(intersect(cats,cuisines))>0&&D["state"]==state;cats_map[D["business_id"]]=setdiff(cats,["Restaurants"])[1]; end
+    end
     if n % 10000==0; println(n); end
 
 
 end
 list=[["","",1]]
 reviewer_map=Dict{AbstractString, Any}()
-filename = "yelp/review.json"
+filename = "../yelp/review.json"
 for (n,l) in enumerate(eachline(filename))
 
     D = JSON.parse(l)
@@ -110,12 +113,13 @@ reviewers_list=[get(reviewer_dict,reviewers_list[i],0) for i in 1:length(reviewe
 for i in 1:length(reviewers_list); list[i][1]=reviewers_list[i]; end
 category_list=[list[i][2] for i in 1:length(list)]
 categories=sort(unique(category_list))
+println(categories)
 category_dict=Dict(categories.=>[i for i in 1:length(categories)])
 category_list=[get(category_dict,category_list[i],0) for i in 1:length(category_list)]
 for i in 1:length(category_list); list[i][2]=category_list[i]; end
 for i in 1:length(category_list); list[i][3]=dates[i]; end
-open("text/yelp"*city*".txt", "w") do h
-    for (a,b,c) in list
-        write(h,"$a\t $b\t $c\n")
-    end
-end
+# open("text/yelp"*city*".txt", "w") do h
+#     for (a,b,c) in list
+#         write(h,"$a\t $b\t $c\n")
+#     end
+# end
