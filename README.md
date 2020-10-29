@@ -1,6 +1,6 @@
-# Fiar Clustering for Diverse and Experienced Groups
+# Hypergraph clustering for finding diverse and experienced groups
 
-This code accompanies the paper "Fair Clustering for Diverse and Experienced Groups" by Ilya Amburg, Nate Veldt and Austin Benson.
+This code accompanies the paper "Hypergraph clustering for finding diverse and experienced groups" by Ilya Amburg, Nate Veldt and Austin Benson.
 
 All code is written in Julia 1.3.1.
 
